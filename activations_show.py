@@ -47,10 +47,10 @@ def activations_show():
 
     fake_img = wgan.generator.predict(random_latent_vectors)
 
-    # activations = keract.get_activations(wgan.generator, random_latent_vectors)
+    activations = keract.get_activations(wgan.generator, random_latent_vectors)
     activations_disc_real = keract.get_activations(wgan.discriminator, image)
     activations_disc_fake = keract.get_activations(wgan.discriminator, fake_img)
 
-    # keract.display_activations(activations, cmap="gray")
+    keract.display_activations(activations, cmap="gray")
     keract.display_heatmaps(activations_disc_real, image, merge_filters=True)
     keract.display_heatmaps(activations_disc_fake, fake_img, merge_filters=True)
