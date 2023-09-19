@@ -6,24 +6,23 @@ from models.get_compiled_WGAN import get_compiled_wgan
 from utilites.dataset_generator import LoadItem
 
 
-def start_train():
-    model_id = 4
+def start_train(epochs: int = 10):
+    model_id = 6
 
     batch_size = 20
 
     img_size = 64
     noise_dim = 64
-    epochs = 10
 
     kid_image_size = 75
 
-    g_filters_start = 16
+    g_filters_start = 32
     g_filters_multiplayer = [8, 4, 2, 1]
     g_attentions = [False, False, False, True]
 
     d_filters_start = 32
     d_filters_multiplayer = [1, 2, 4, 8]
-    d_attentions = [True, False, False, False]
+    d_attentions = [True, False, False, True]
 
     train_data = LoadItem("datasets/ICC/", img_size, batch_size, "one")
 
@@ -48,7 +47,7 @@ def start_train():
 
     train_callbacks = [
         ModelCheckpoint(filepath=checkpoint_path, save_weights_only=True),
-        GANMonitor(),
+        GANMonitor(num_rows=3, num_cols=3),
         CSVLogger(loggerPath, append=True)
     ]
 
