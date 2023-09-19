@@ -134,6 +134,20 @@ class WGAN(keras.Model):
         # only KID is measured during the evaluation phase for computational efficiency
         return {self.kid.name: self.kid.result()}
 
+    def generate(self, batch_size: int = 1, batch_count: int = 1, seed: int = None):
+        if seed is None:
+            seed = math.floor(time.time())
+        tf.random.set_seed(seed)
+        random_latent_vectors = tf.random.normal(shape=(batch_count, batch_size, self.latent_dim))
+
+        generated = []
+
+        for batch in random_latent_vectors:
+            generated_images = self.generator(batch)
+            generated.append(generated_images)
+
+        return generated, seed
+
     def plot_images(
             self,
             epoch=None,
