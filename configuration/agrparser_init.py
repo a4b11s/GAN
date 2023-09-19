@@ -24,6 +24,16 @@ def agrparser_init():
     )
 
     parser.add_argument(
+        '-e',
+        '--epoch',
+        action='store',
+        type=int,
+        dest="epoch_count",
+        help="Start training",
+        default=20
+    )
+
+    parser.add_argument(
         '-sa',
         '--show_activation',
         action='store_true',
