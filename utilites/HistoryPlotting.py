@@ -26,7 +26,7 @@ class HistoryPlotting:
                 for i, value in enumerate(row):
                     if i == 0:
                         continue
-                    data[headers[i]].append(value)
+                    data[headers[i]].append(float(value))
 
         return data
 
