@@ -1,6 +1,7 @@
 import math
 import time
 
+import numpy as np
 import tensorflow as tf
 from matplotlib import pyplot as plt
 from tensorflow import keras
@@ -144,7 +145,10 @@ class WGAN(keras.Model):
 
         for batch in random_latent_vectors:
             generated_images = self.generator(batch)
+            generated_images = tf.clip_by_value(generated_images, 0.0, 1.0)
             generated.append(generated_images)
+
+        generated = np.array(generated)
 
         return generated, seed
 
