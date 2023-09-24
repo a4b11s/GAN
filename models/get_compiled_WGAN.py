@@ -19,8 +19,8 @@ def get_compiled_wgan(img_size, noise_dim, kid_image_size, disc_config, gen_conf
         g_model.summary()
 
     # (learning_rate=0.0002, beta_1=0.5 are recommended)
-    generator_optimizer = Adam(learning_rate=0.0002, beta_1=0.5, beta_2=0.9)
-    discriminator_optimizer = Adam(learning_rate=0.0002, beta_1=0.5, beta_2=0.9)
+    generator_optimizer = Adam(learning_rate=0.0001, beta_1=0.0, beta_2=0.9)
+    discriminator_optimizer = Adam(learning_rate=0.0004, beta_1=0.0, beta_2=0.9)
 
     # Define the loss functions for the discriminator,
     # which should be (fake_loss - real_loss).

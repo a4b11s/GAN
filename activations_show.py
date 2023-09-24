@@ -7,21 +7,19 @@ from keras.utils import img_to_array
 from models.get_compiled_WGAN import get_compiled_wgan
 
 
-def activations_show():
-    model_id = 4
+def activations_show(config):
+    img_size = config.img_size
+    noise_dim = config.noise_dim
 
-    img_size = 64
-    noise_dim = 64
+    kid_image_size = config.kid_image_size
 
-    kid_image_size = 75
+    g_filters_start = config.g_filters_start
+    g_filters_multiplayer = config.g_filters_multiplayer
+    g_attentions = config.g_attentions
 
-    g_filters_start = 16
-    g_filters_multiplayer = [8, 4, 2, 1]
-    g_attentions = [False, False, False, True]
-
-    d_filters_start = 32
-    d_filters_multiplayer = [1, 2, 4, 8]
-    d_attentions = [True, False, False, False]
+    d_filters_start = config.d_filters_start
+    d_filters_multiplayer = config.d_filters_multiplayer
+    d_attentions = config.d_attentions
 
     wgan = get_compiled_wgan(
         img_size=img_size,
@@ -31,6 +29,7 @@ def activations_show():
         disc_config=(d_filters_start, d_filters_multiplayer, d_attentions),
     )
 
+    model_id = 2
     checkpoint_path = f"checkpoints/{model_id}/model"
 
     wgan.load_weights(checkpoint_path)

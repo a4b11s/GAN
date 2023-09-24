@@ -3,28 +3,28 @@ from tensorflow.python.framework.errors_impl import NotFoundError
 
 from callbacks.GANMonitor import GANMonitor
 from models.get_compiled_WGAN import get_compiled_wgan
-from utilites.dataset_generator import LoadItem
+from utilites.dataset_load import DatasetFromDir
 
 
-def start_train(epochs: int = 10):
-    model_id = 6
+def start_train(epochs: int, config):
+    model_id = 1
 
-    batch_size = 20
+    batch_size = config.batch_size
 
-    img_size = 64
-    noise_dim = 64
+    img_size = config.img_size
+    noise_dim = config.noise_dim
 
-    kid_image_size = 75
+    kid_image_size = config.kid_image_size
 
-    g_filters_start = 32
-    g_filters_multiplayer = [8, 4, 2, 1]
-    g_attentions = [False, False, False, True]
+    g_filters_start = config.g_filters_start
+    g_filters_multiplayer = config.g_filters_multiplayer
+    g_attentions = config.g_attentions
 
-    d_filters_start = 32
-    d_filters_multiplayer = [1, 2, 4, 8]
-    d_attentions = [True, False, False, True]
+    d_filters_start = config.d_filters_start
+    d_filters_multiplayer = config.d_filters_multiplayer
+    d_attentions = config.d_attentions
 
-    train_data = LoadItem("datasets/ICC/", img_size, batch_size, "one")
+    train_data, val_data = DatasetFromDir("datasets/anime/", img_size, batch_size, 1 / 10).load_dataset()
 
     wgan = get_compiled_wgan(
         img_size=img_size,
@@ -47,9 +47,9 @@ def start_train(epochs: int = 10):
 
     train_callbacks = [
         ModelCheckpoint(filepath=checkpoint_path, save_weights_only=True),
-        GANMonitor(num_rows=3, num_cols=3),
+        GANMonitor(9),
         CSVLogger(loggerPath, append=True)
     ]
 
-    wgan.fit(train_data, batch_size=batch_size, epochs=epochs,
+    wgan.fit(train_data, validation_data=val_data, batch_size=batch_size, epochs=epochs,
              callbacks=train_callbacks)
