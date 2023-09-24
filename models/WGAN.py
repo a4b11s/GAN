@@ -1,6 +1,7 @@
 import math
 import time
 
+import numpy as np
 import tensorflow as tf
 from matplotlib import pyplot as plt
 from tensorflow import keras
@@ -133,6 +134,23 @@ class WGAN(keras.Model):
 
         # only KID is measured during the evaluation phase for computational efficiency
         return {self.kid.name: self.kid.result()}
+
+    def generate(self, batch_size: int = 1, batch_count: int = 1, seed: int = None):
+        if seed is None:
+            seed = math.floor(time.time())
+        tf.random.set_seed(seed)
+        random_latent_vectors = tf.random.normal(shape=(batch_count, batch_size, self.latent_dim))
+
+        generated = []
+
+        for batch in random_latent_vectors:
+            generated_images = self.generator(batch)
+            generated_images = tf.clip_by_value(generated_images, 0.0, 1.0)
+            generated.append(generated_images)
+
+        generated = np.array(generated)
+
+        return generated, seed
 
     def plot_images(
             self,

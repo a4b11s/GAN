@@ -40,4 +40,29 @@ def agrparser_init():
         help="Show layers activation"
     )
 
+    parser.add_argument(
+        '-g',
+        '--generate',
+        action='store_true',
+        help="Generate images"
+    )
+
+    parser.add_argument(
+        '-bs',
+        '--batch_size',
+        action='store',
+        help="Generate images batch_size",
+        default=9,
+        type=int
+    )
+
+    parser.add_argument(
+        '-bc',
+        '--batch_count',
+        action='store',
+        help="Generate images batch_count",
+        default=1,
+        type=int
+    )
+
     return parser
