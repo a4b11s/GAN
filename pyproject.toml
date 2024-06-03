@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "ganai"
+version = "0.1.0"
+description = ""
+authors = ["Artem Bazyl <a4b11s@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+tensorflow = "^2.16.1"
+keract-nightly = "^5.1"
+
+[tool.poetry.group.dev.dependencies]
+mypy = "^1.10.0"
+ruff = "^0.4.7"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
