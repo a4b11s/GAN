@@ -1,9 +1,9 @@
 import numpy as np
 
-from models.get_compiled_WGAN import get_compiled_wgan
-from utilites.plot_image import plot_image
+from ganai.models import get_compiled_wgan
+from ganai.utilites import plot_image
 
-from configuration.Config import Config
+from ganai.configuration import Config
 
 
 from numpy.typing import NDArray

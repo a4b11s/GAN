@@ -1,0 +1,25 @@
+version: "3"
+services:
+  ganai:
+    image: gan-ai:latest
+    runtime: nvidia
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    container_name: gan-ai
+    restart: unless-stopped
+    environment:
+      NVIDIA_VISIBLE_DEVICES: "all"
+    volumes:
+      - ./data:/data
+    deploy:
+      resources:
+        reservations:
+            devices:
+              - driver: nvidia
+                count: all
+                capabilities: [gpu]
+        limits:
+          memory: "6g"
+          cpus: '0.5'
+

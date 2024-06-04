@@ -2,7 +2,7 @@ import numpy as np
 from keras.api.layers import Flatten, Input, Dense
 from keras.api.models import Model
 
-from utilites.layers import ResBlockDown, SelfAttention
+from ganai.layers import ResBlockDown, SelfAttention
 
 
 def build_discriminator(img_size: int, filters_start: int=16, filters_multiplayer: list[int]=None, is_attentions: list[bool]=None) -> Model:

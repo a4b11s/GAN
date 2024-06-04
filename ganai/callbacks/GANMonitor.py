@@ -1,7 +1,7 @@
 import numpy as np
 from keras.api.callbacks import Callback
 
-from utilites.plot_image import plot_image
+from ganai.utilites import plot_image
 
 
 class GANMonitor(Callback):

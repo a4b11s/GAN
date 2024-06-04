@@ -1,8 +1,6 @@
 from keras.api.layers import Conv2D, Layer, SpectralNormalization, MaxPool2D
 from keras.api import ops
 
-import tensorflow as tf
-
 
 class SelfAttention(Layer):
     def __init__(self):
@@ -34,7 +32,7 @@ class SelfAttention(Layer):
             kernel_constraint=SpectralNormalization(),
             name="Conv_G",
         )
-        
+
         self.conv_attn_g = Conv2D(
             c,
             1,
@@ -42,8 +40,10 @@ class SelfAttention(Layer):
             kernel_constraint=SpectralNormalization(),
             name="Conv_AttnG",
         )
-        
-        self.max_pull_2d = MaxPool2D(pool_size=2, strides=2, padding="VALID", name="Max_Pull_2D")
+
+        self.max_pull_2d = MaxPool2D(
+            pool_size=2, strides=2, padding="VALID", name="Max_Pull_2D"
+        )
 
         self.sigma = self.add_weight(
             shape=[1], initializer="zeros", trainable=True, name="sigma"

@@ -1,9 +1,16 @@
 import numpy as np
 from keras.api.activations import tanh
-from keras.api.layers import Input, Dense, Reshape, UpSampling2D, Conv2D
+from keras.api.layers import (
+    Input,
+    Dense,
+    Reshape,
+    UpSampling2D,
+    Conv2D,
+    SpectralNormalization,
+)
 from keras.api.models import Model
 
-from utilites.layers import SpectralNormalization, ResBlock, SelfAttention
+from ganai.layers import ResBlock, SelfAttention
 
 
 def build_sa_generator(

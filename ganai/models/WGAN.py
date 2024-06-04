@@ -8,7 +8,7 @@ import keras
 from keras import Model
 from numpy.typing import NDArray
 
-from utilites.KID import KID
+from ganai.utilites import KID
 
 
 class WGAN(keras.Model):

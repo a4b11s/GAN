@@ -2,10 +2,9 @@ import tensorflow as tf
 from keras.api.optimizers import Adam
 from keras.api.models import Model
 
-from architectures.self_attention_discriminator import build_discriminator
-from architectures.self_attention_generator import build_sa_generator
-from models.WGAN import WGAN
-from utilites.KID import KID
+from ganai.architectures import build_discriminator, build_sa_generator
+from ganai.models import WGAN
+from ganai.utilites import KID
 
 
 def get_compiled_wgan(

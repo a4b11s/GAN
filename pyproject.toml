@@ -7,14 +7,16 @@ readme = "README.md"
 package-mode = false
 
 [tool.poetry.dependencies]
-python = "^3.12"
+python = ">=3.11,<4"
 tensorflow = "^2.16.1"
 keras = "^3.3.3"
 pillow = "^10.3.0"
 matplotlib = "^3.9.0"
-tensorflow-datasets = "^4.9.5"
 
 [tool.poetry.group.dev.dependencies]
 mypy = "^1.10.0"
 ruff = "^0.4.7"
 mkinit = "^1.1.0"
+
+[tool.poetry.scripts]
+start = "ganai.main:start"

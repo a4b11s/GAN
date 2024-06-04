@@ -1,10 +1,10 @@
 from keras.api.callbacks import ModelCheckpoint, CSVLogger
 from tensorflow.python.framework.errors_impl import NotFoundError
 
-from callbacks.GANMonitor import GANMonitor
-from models.get_compiled_WGAN import get_compiled_wgan
-from utilites.dataset_load import DatasetFromDir
-from configuration.Config import Config
+from ganai.configuration import Config
+from ganai.callbacks import GANMonitor
+from ganai.models import get_compiled_wgan
+from ganai.utilites import DatasetFromDir
 
 
 def start_train(epochs: int, config: Config) -> None:
