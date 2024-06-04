@@ -17,3 +17,4 @@ tensorflow-datasets = "^4.9.5"
 [tool.poetry.group.dev.dependencies]
 mypy = "^1.10.0"
 ruff = "^0.4.7"
+mkinit = "^1.1.0"
