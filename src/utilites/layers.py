@@ -1,6 +1,6 @@
 import tensorflow as tf
-from keras.constraints import Constraint
-from keras.layers import Conv2D, Layer
+from keras.api.constraints import Constraint
+from keras.api.layers import Conv2D, Layer
 
 
 class SpectralNormalization(Constraint):

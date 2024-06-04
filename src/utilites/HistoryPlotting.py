@@ -11,7 +11,7 @@ class HistoryPlotting:
         self.history = None
 
     @staticmethod
-    def _load_csv(file_path):
+    def _load_csv(file_path:str) -> dict[str, list[float]]:
         with open(file_path, mode="r", newline='') as csvfile:
             reader = csv.reader(csvfile)
             headers = next(reader)
@@ -30,11 +30,11 @@ class HistoryPlotting:
 
         return data
 
-    def __load_data(self):
+    def __load_data(self) -> None:
         if self.file_type == "csv":
             self.history = self._load_csv(self.file_path)
 
-    def plot(self, is_save: bool = False, save_dir: str = "./", plot_type: Literal["plot"] = "plot"):
+    def plot(self, is_save: bool = False, save_dir: str = "./", plot_type: Literal["plot"] = "plot") -> None:
         if self.history is None:
             self.__load_data()
         if plot_type == "plot":

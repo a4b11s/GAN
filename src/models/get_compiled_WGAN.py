@@ -1,5 +1,6 @@
 import tensorflow as tf
-from keras.optimizers import Adam
+from keras.api.optimizers import Adam
+from keras.api.models import Model
 
 from architectures.self_attention_discriminator import build_discriminator
 from architectures.self_attention_generator import build_sa_generator
@@ -7,12 +8,23 @@ from models.WGAN import WGAN
 from utilites.KID import KID
 
 
-def get_compiled_wgan(img_size, noise_dim, kid_image_size, disc_config, gen_config, is_summary=False):
+def get_compiled_wgan(
+    img_size: int,
+    noise_dim: int,
+    kid_image_size: int,
+    disc_config: tuple[int, list[int], list[bool]],
+    gen_config: tuple[int, list[int], list[bool]],
+    is_summary: bool = False,
+) -> WGAN:
     d_filters_start, d_filters_multiplayer, d_attentions = disc_config
     g_filters_start, g_filters_multiplayer, g_attentions = gen_config
 
-    d_model = build_discriminator(img_size, d_filters_start, d_filters_multiplayer, d_attentions)
-    g_model = build_sa_generator(noise_dim, g_filters_start, g_filters_multiplayer, g_attentions)
+    d_model: Model = build_discriminator(
+        img_size, d_filters_start, d_filters_multiplayer, d_attentions
+    )
+    g_model: Model = build_sa_generator(
+        noise_dim, g_filters_start, g_filters_multiplayer, g_attentions
+    )
 
     if is_summary:
         d_model.summary()
@@ -25,13 +37,13 @@ def get_compiled_wgan(img_size, noise_dim, kid_image_size, disc_config, gen_conf
     # Define the loss functions for the discriminator,
     # which should be (fake_loss - real_loss).
     # We will add the gradient penalty later to this loss function.
-    def discriminator_loss(real_img, fake_img):
+    def discriminator_loss(real_img: tf.Tensor, fake_img: tf.Tensor) -> tf.Tensor:
         real_loss = tf.reduce_mean(real_img)
         fake_loss = tf.reduce_mean(fake_img)
         return fake_loss - real_loss
 
     # Define the loss functions for the generator.
-    def generator_loss(fake_img):
+    def generator_loss(fake_img: tf.Tensor) -> tf.Tensor:
         return -tf.reduce_mean(fake_img)
 
     wgan = WGAN(

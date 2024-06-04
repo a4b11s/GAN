@@ -4,18 +4,22 @@ import time
 import numpy as np
 import tensorflow as tf
 from matplotlib import pyplot as plt
-from tensorflow import keras
+import keras
+from keras import Model
+from numpy.typing import NDArray
+
+from utilites.KID import KID
 
 
 class WGAN(keras.Model):
     def __init__(
-            self,
-            discriminator,
-            generator,
-            latent_dim,
-            discriminator_extra_steps=3,
-            gp_weight=10.0,
-    ):
+        self,
+        discriminator: Model,
+        generator: Model,
+        latent_dim: int,
+        discriminator_extra_steps: int = 3,
+        gp_weight: float = 10.0,
+    ) -> None:
         super().__init__()
         self.discriminator = discriminator
         self.generator = generator
@@ -23,13 +27,13 @@ class WGAN(keras.Model):
         self.d_steps = discriminator_extra_steps
         self.gp_weight = gp_weight
 
-        self.kid = None
+        self.kid: KID = None
         self.g_loss_fn = None
         self.d_loss_fn = None
         self.g_optimizer = None
         self.d_optimizer = None
 
-    def compile(self, d_optimizer, g_optimizer, d_loss_fn, g_loss_fn, kid):
+    def compile(self, d_optimizer, g_optimizer, d_loss_fn, g_loss_fn, kid) -> None:
         super().compile()
         self.d_optimizer = d_optimizer
         self.g_optimizer = g_optimizer
@@ -37,7 +41,7 @@ class WGAN(keras.Model):
         self.g_loss_fn = g_loss_fn
         self.kid = kid
 
-    def gradient_penalty(self, batch_size, real_images, fake_images):
+    def gradient_penalty(self, batch_size, real_images, fake_images) -> tf.Tensor:
         """Calculates the gradient penalty.
 
         This loss is calculated on an interpolated image
@@ -60,7 +64,7 @@ class WGAN(keras.Model):
         gp = tf.reduce_mean((norm - 1.0) ** 2)
         return gp
 
-    def train_step(self, real_images):
+    def train_step(self, real_images) -> dict[str, tf.Tensor]:
         if isinstance(real_images, tuple):
             real_images = real_images[0]
 
@@ -125,7 +129,7 @@ class WGAN(keras.Model):
         )
         return {"d_loss": d_loss, "g_loss": g_loss}
 
-    def test_step(self, real_images):
+    def test_step(self, real_images) -> dict[str, tf.Tensor]:
         batch_size = tf.shape(real_images)[0]
         random_latent_vectors = tf.random.normal(shape=(batch_size, self.latent_dim))
         generated_images = self.generator(random_latent_vectors)
@@ -135,11 +139,15 @@ class WGAN(keras.Model):
         # only KID is measured during the evaluation phase for computational efficiency
         return {self.kid.name: self.kid.result()}
 
-    def generate(self, batch_size: int = 1, batch_count: int = 1, seed: int = None):
+    def generate(
+        self, batch_size: int = 1, batch_count: int = 1, seed: int = None
+    ) -> tuple[NDArray[np.float32], int]:
         if seed is None:
             seed = math.floor(time.time())
         tf.random.set_seed(seed)
-        random_latent_vectors = tf.random.normal(shape=(batch_count, batch_size, self.latent_dim))
+        random_latent_vectors = tf.random.normal(
+            shape=(batch_count, batch_size, self.latent_dim)
+        )
 
         generated = []
 
@@ -148,20 +156,20 @@ class WGAN(keras.Model):
             generated_images = tf.clip_by_value(generated_images, 0.0, 1.0)
             generated.append(generated_images)
 
-        generated = np.array(generated)
+        generated = np.array(generated, dtype=np.float32)
 
         return generated, seed
 
     def plot_images(
-            self,
-            epoch=None,
-            logs=None,
-            save_dir="output",
-            num_rows=2,
-            num_cols=2,
-            seed=None,
-            is_show=False,
-    ):
+        self,
+        epoch=None,
+        logs=None,
+        save_dir="output",
+        num_rows=2,
+        num_cols=2,
+        seed=None,
+        is_show=False,
+    ) -> None:
 
         if seed is None:
             seed = math.floor(time.time())
@@ -182,7 +190,7 @@ class WGAN(keras.Model):
 
         for i in range(num_rows):
             for j in range(num_cols):
-                ax[i, j].axis('off')
+                ax[i, j].axis("off")
                 ax[i, j].set_aspect("equal")
                 ax[i, j].imshow(generated_images[i + j])
         if is_show:

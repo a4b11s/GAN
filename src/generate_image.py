@@ -3,8 +3,13 @@ import numpy as np
 from models.get_compiled_WGAN import get_compiled_wgan
 from utilites.plot_image import plot_image
 
+from configuration.Config import Config
 
-def generate_image(batch_size, batch_count, config):
+
+from numpy.typing import NDArray
+
+
+def generate_image(batch_size: int, batch_count: int, config: Config) -> None:
     img_size = config.img_size
     noise_dim = config.noise_dim
 
@@ -31,7 +36,10 @@ def generate_image(batch_size, batch_count, config):
 
     wgan.load_weights(checkpoint_path)
 
-    image_batchs, seed = wgan.generate(batch_size, batch_count)
+    output = wgan.generate(batch_size, batch_count)
+
+    image_batchs: NDArray[np.float32] = output[0]
+    seed: int = output[1]
 
     for index, batch in enumerate(image_batchs):
         plotted_image = plot_image((batch * 255).astype(np.uint8))

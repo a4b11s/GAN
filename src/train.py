@@ -1,12 +1,13 @@
-from keras.callbacks import ModelCheckpoint, CSVLogger
+from keras.api.callbacks import ModelCheckpoint, CSVLogger
 from tensorflow.python.framework.errors_impl import NotFoundError
 
 from callbacks.GANMonitor import GANMonitor
 from models.get_compiled_WGAN import get_compiled_wgan
 from utilites.dataset_load import DatasetFromDir
+from configuration.Config import Config
 
 
-def start_train(epochs: int, config):
+def start_train(epochs: int, config: Config) -> None:
     model_id = 1
 
     batch_size = config.batch_size
@@ -24,7 +25,9 @@ def start_train(epochs: int, config):
     d_filters_multiplayer = config.d_filters_multiplayer
     d_attentions = config.d_attentions
 
-    train_data, val_data = DatasetFromDir("datasets/anime/", img_size, batch_size, 1 / 10).load_dataset()
+    train_data, val_data = DatasetFromDir(
+        "datasets/anime/", img_size, batch_size, 1 / 10
+    ).load_dataset()
 
     wgan = get_compiled_wgan(
         img_size=img_size,
@@ -45,11 +48,16 @@ def start_train(epochs: int, config):
     except NotFoundError:
         print("Model checkpoint not found")
 
-    train_callbacks = [
+    train_callbacks: list[callable] = [
         ModelCheckpoint(filepath=checkpoint_path, save_weights_only=True),
         GANMonitor(9),
-        CSVLogger(loggerPath, append=True)
+        CSVLogger(loggerPath, append=True),
     ]
 
-    wgan.fit(train_data, validation_data=val_data, batch_size=batch_size, epochs=epochs,
-             callbacks=train_callbacks)
+    wgan.fit(
+        train_data,
+        validation_data=val_data,
+        batch_size=batch_size,
+        epochs=epochs,
+        callbacks=train_callbacks,
+    )

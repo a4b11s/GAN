@@ -3,7 +3,7 @@ import math
 from PIL import Image, ImageOps
 
 
-def plot_image(images, gap: int = 1):
+def plot_image(images, gap: int = 1) -> Image.Image:
     image_count = images.shape[0]
     image_size = images.shape[1]
 

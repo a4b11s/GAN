@@ -1,11 +1,16 @@
+from typing import Any
 import keras
+from optree import PyTree
 import tensorflow as tf
 from keras import layers, applications
-from keras.metrics import Metric, Mean
+from keras.api.metrics import Metric, Mean
+from numpy.typing import NDArray
 
 
 class KID(Metric):
-    def __init__(self, image_size, kid_image_size, name="kid", **kwargs):
+    def __init__(
+        self, image_size: int, kid_image_size: int, name: str = "kid", **kwargs
+    ):
         super().__init__(name=name, **kwargs)
 
         # KID is estimated per batch and is averaged across batches
@@ -30,11 +35,13 @@ class KID(Metric):
             name="inception_encoder",
         )
 
-    def polynomial_kernel(self, features_1, features_2):
+    def polynomial_kernel(
+        self, features_1: tf.Tensor, features_2: tf.Tensor
+    ) -> tf.Tensor:
         feature_dimensions = tf.cast(tf.shape(features_1)[1], dtype=tf.float32)
         return (features_1 @ tf.transpose(features_2) / feature_dimensions + 1.0) ** 3.0
 
-    def update_state(self, real_images, generated_images, sample_weight=None):
+    def update_state(self, real_images, generated_images, sample_weight=None) -> None:
         real_features = self.encoder(real_images, training=False)
         generated_features = self.encoder(generated_images, training=False)
 
@@ -49,7 +56,7 @@ class KID(Metric):
         batch_size = tf.shape(real_features)[0]
         batch_size_f = tf.cast(batch_size, dtype=tf.float32)
         mean_kernel_real = tf.reduce_sum(kernel_real * (1.0 - tf.eye(batch_size))) / (
-                batch_size_f * (batch_size_f - 1.0)
+            batch_size_f * (batch_size_f - 1.0)
         )
         mean_kernel_generated = tf.reduce_sum(
             kernel_generated * (1.0 - tf.eye(batch_size))
@@ -60,8 +67,8 @@ class KID(Metric):
         # update the average KID estimate
         self.kid_tracker.update_state(kid)
 
-    def result(self):
+    def result(self) -> PyTree | NDArray[Any]:
         return self.kid_tracker.result()
 
-    def reset_state(self):
+    def reset_state(self) -> None:
         self.kid_tracker.reset_state()

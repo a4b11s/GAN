@@ -1,16 +1,16 @@
 class Config:
-    def __init__(self):
-        self.batch_size = 16
+    def __init__(self) -> None:
+        self.batch_size: int = 16
 
-        self.img_size = 64
-        self.noise_dim = 128
+        self.img_size: int = 64
+        self.noise_dim: int = 128
 
-        self.kid_image_size = 75
+        self.kid_image_size: int = 75
 
-        self.g_filters_start = 16
-        self.g_filters_multiplayer = [8, 4, 2, 1]
-        self.g_attentions = [False, False, False, True]
+        self.g_filters_start: int = 16
+        self.g_filters_multiplayer: list[int] = [8, 4, 2, 1]
+        self.g_attentions: list[bool] = [False, False, False, True]
 
-        self.d_filters_start = 32
-        self.d_filters_multiplayer = [1, 2, 4, 8]
-        self.d_attentions = [False, False, True, False]
+        self.d_filters_start: int = 32
+        self.d_filters_multiplayer: list[int] = [1, 2, 4, 8]
+        self.d_attentions: list[bool] = [False, False, True, False]

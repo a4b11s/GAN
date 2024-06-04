@@ -1,12 +1,17 @@
 import numpy as np
-from keras.activations import tanh
-from keras.layers import Input, Dense, Reshape, UpSampling2D, Conv2D
-from keras.models import Model
+from keras.api.activations import tanh
+from keras.api.layers import Input, Dense, Reshape, UpSampling2D, Conv2D
+from keras.api.models import Model
 
 from utilites.layers import SpectralNormalization, ResBlock, SelfAttention
 
 
-def build_sa_generator(latent_dim, filters_start=16, filters_multiplayer=None, is_attentions=None):
+def build_sa_generator(
+    latent_dim: int,
+    filters_start: int = 16,
+    filters_multiplayer: list[int] = None,
+    is_attentions: list[bool] = None,
+) -> Model:
     if filters_multiplayer is None:
         filters_multiplayer = [8, 4, 2, 1]
 
@@ -27,6 +32,8 @@ def build_sa_generator(latent_dim, filters_start=16, filters_multiplayer=None, i
         if is_attention:
             x = SelfAttention()(x)
 
-    output_img = tanh(Conv2D(3, 3, padding="same", kernel_constraint=SpectralNormalization())(x))
+    output_img = tanh(
+        Conv2D(3, 3, padding="same", kernel_constraint=SpectralNormalization())(x)
+    )
 
     return Model([z], output_img, name="generator")

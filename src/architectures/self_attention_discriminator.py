@@ -1,11 +1,11 @@
 import numpy as np
-from keras.layers import Flatten, Input, Dense
-from keras.models import Model
+from keras.api.layers import Flatten, Input, Dense
+from keras.api.models import Model
 
 from utilites.layers import ResBlockDown, SelfAttention
 
 
-def build_discriminator(img_size, filters_start=16, filters_multiplayer=None, is_attentions=None):
+def build_discriminator(img_size: int, filters_start: int=16, filters_multiplayer: list[int]=None, is_attentions: list[bool]=None) -> Model:
     if filters_multiplayer is None:
         filters_multiplayer = [1, 2, 4]
 

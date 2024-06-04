@@ -1,8 +1,18 @@
-import argparse
+from argparse import ArgumentParser
 
+class ProgramArgs:
+    logfile_path: str
+    batch_size: int
+    batch_count: int
+    epoch_count: int
+    
+    generate: bool
+    show_activation: bool
+    train: bool
+    
 
-def agrparser_init():
-    parser = argparse.ArgumentParser(
+def agrparser_init() -> ArgumentParser:
+    parser = ArgumentParser(
         prog='SA_WG_GAN',
         description='Self-attention WGAN'
     )
