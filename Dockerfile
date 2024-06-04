@@ -12,7 +12,6 @@ WORKDIR /app/
 
 COPY ganai ganai
 
-RUN --mount=type=cache,target=/root/.cache/pip \
-    poetry install --without dev
+RUN poetry install --without dev
 
 ENTRYPOINT [ "poetry", "run", "start", "-t", "-e", "100"]

@@ -26,7 +26,7 @@ def start_train(epochs: int, config: Config) -> None:
     d_attentions = config.d_attentions
 
     train_data, val_data = DatasetFromDir(
-        "datasets/anime/", img_size, batch_size, 1 / 10
+        "/data/anime/", img_size, batch_size, 1 / 10
     ).load_dataset()
 
     wgan = get_compiled_wgan(
@@ -38,8 +38,8 @@ def start_train(epochs: int, config: Config) -> None:
         is_summary=True,
     )
 
-    checkpoint_path = f"checkpoints/{model_id}/model"
-    loggerPath = f"log/{model_id}-log.csv"
+    checkpoint_path = f"/data/checkpoints/{model_id}/model"
+    loggerPath = f"/data/log/{model_id}-log.csv"
 
     try:
         wgan.load_weights(checkpoint_path)
