@@ -38,18 +38,9 @@ def start_train(epochs: int, config: Config) -> None:
         is_summary=True,
     )
 
-    checkpoint_path = f"/data/checkpoints/{model_id}/model"
     loggerPath = f"/data/log/{model_id}-log.csv"
 
-    try:
-        wgan.load_weights(checkpoint_path)
-        print("Model checkpoint loaded")
-        wgan.plot_images(epoch=-1)
-    except NotFoundError:
-        print("Model checkpoint not found")
-
     train_callbacks: list[callable] = [
-        ModelCheckpoint(filepath=checkpoint_path, save_weights_only=True),
         GANMonitor(9),
         CSVLogger(loggerPath, append=True),
     ]

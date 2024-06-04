@@ -1,6 +1,7 @@
 from keras.api.layers import Conv2D, Layer, SpectralNormalization, MaxPool2D
 from keras.api import ops
 
+import tensorflow as tf
 
 class SelfAttention(Layer):
     def __init__(self):
@@ -61,23 +62,23 @@ class SelfAttention(Layer):
         n, h, w, c = x.shape
 
         theta = self.conv_theta(x)
-        theta = ops.reshape(theta, (-1, self.n_feats, theta.shape[-1]))
+        theta = tf.reshape(theta, (-1, self.n_feats, theta.shape[-1]))
 
         phi = self.conv_phi(x)
-        phi = ops.max_pool(phi, pool_size=2, strides=2, padding="VALID")
-        phi = ops.reshape(phi, (-1, self.n_feats // 4, phi.shape[-1]))
+        phi = tf.nn.max_pool2d(phi, ksize=2, strides=2, padding="VALID")
+        phi = tf.reshape(phi, (-1, self.n_feats // 4, phi.shape[-1]))
 
         # generate attention map
-        attn = ops.matmul(theta, ops.transpose(phi))
-        attn = ops.softmax(attn)
+        attn = tf.matmul(theta, phi, transpose_b=True)
+        attn = tf.nn.softmax(attn)
 
         g = self.conv_g(x)
-        g = self.max_pull_2d(g)
-        g = ops.reshape(g, (-1, self.n_feats // 4, g.shape[-1]))
+        g = tf.nn.max_pool2d(g, ksize=2, strides=2, padding="VALID")
+        g = tf.reshape(g, (-1, self.n_feats // 4, g.shape[-1]))
 
         # multiply attn map with feature maps
-        attn_g = ops.matmul(attn, g)
-        attn_g = ops.reshape(attn_g, (-1, h, w, attn_g.shape[-1]))
+        attn_g = tf.matmul(attn, g)
+        attn_g = tf.reshape(attn_g, (-1, h, w, attn_g.shape[-1]))
         attn_g = self.conv_attn_g(attn_g)
 
         output = x + self.sigma * attn_g
