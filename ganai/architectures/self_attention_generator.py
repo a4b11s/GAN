@@ -27,9 +27,9 @@ def build_sa_generator(
 
     filters_size = np.array(filters_multiplayer) * filters_start
 
-    z = Input(shape=latent_dim)
+    z = Input(shape=(latent_dim,))
 
-    x = Dense(4 * 4 * filters_size[0], kernel_constraint=SpectralNormalization())(z)
+    x = SpectralNormalization(Dense(4 * 4 * filters_size[0]))(z)
     x = Reshape((4, 4, filters_size[0]))(x)
 
     for c_filter, is_attention in zip(filters_size, is_attentions):
@@ -40,7 +40,7 @@ def build_sa_generator(
             x = SelfAttention()(x)
 
     output_img = tanh(
-        Conv2D(3, 3, padding="same", kernel_constraint=SpectralNormalization())(x)
+        SpectralNormalization(Conv2D(3, 3, padding="same"))(x)
     )
 
     return Model([z], output_img, name="generator")
