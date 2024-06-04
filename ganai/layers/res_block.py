@@ -9,32 +9,35 @@ class ResBlock(Layer):
 
     def build(self, input_shape):
         input_filter = input_shape[-1]
-        self.conv_1 = Conv2D(
-            self.filters,
-            3,
-            padding="same",
-            name="conv2d_1",
-            kernel_constraint=SpectralNormalization(),
+        self.conv_1 = SpectralNormalization(
+            Conv2D(
+                self.filters,
+                3,
+                padding="same",
+                name="conv2d_1",
+            )
         )
 
-        self.conv_2 = Conv2D(
-            self.filters,
-            3,
-            padding="same",
-            name="conv2d_2",
-            kernel_constraint=SpectralNormalization(),
+        self.conv_2 = SpectralNormalization(
+            Conv2D(
+                self.filters,
+                3,
+                padding="same",
+                name="conv2d_2",
+            )
         )
 
         self.learned_skip = False
 
         if self.filters != input_filter:
             self.learned_skip = True
-            self.conv_3 = Conv2D(
-                self.filters,
-                1,
-                padding="same",
-                name="conv2d_3",
-                kernel_constraint=SpectralNormalization(),
+            self.conv_3 = SpectralNormalization(
+                Conv2D(
+                    self.filters,
+                    1,
+                    padding="same",
+                    name="conv2d_3",
+                )
             )
 
     def call(self, input_tensor, **kwargs):

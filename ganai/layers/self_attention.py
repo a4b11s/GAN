@@ -9,36 +9,40 @@ class SelfAttention(Layer):
     def build(self, input_shape):
         _, h, w, c = input_shape
         self.n_feats = h * w
-        self.conv_theta = Conv2D(
-            c // 8,
-            1,
-            padding="same",
-            kernel_constraint=SpectralNormalization(),
-            name="Conv_Theta",
+        self.conv_theta = SpectralNormalization(
+            Conv2D(
+                c // 8,
+                1,
+                padding="same",
+                name="Conv_Theta",
+            )
         )
 
-        self.conv_phi = Conv2D(
-            c // 8,
-            1,
-            padding="same",
-            kernel_constraint=SpectralNormalization(),
-            name="Conv_Phi",
+        self.conv_phi = SpectralNormalization(
+            Conv2D(
+                c // 8,
+                1,
+                padding="same",
+                name="Conv_Phi",
+            )
         )
 
-        self.conv_g = Conv2D(
-            c // 2,
-            1,
-            padding="same",
-            kernel_constraint=SpectralNormalization(),
-            name="Conv_G",
+        self.conv_g = SpectralNormalization(
+            Conv2D(
+                c // 2,
+                1,
+                padding="same",
+                name="Conv_G",
+            )
         )
 
-        self.conv_attn_g = Conv2D(
-            c,
-            1,
-            padding="same",
-            kernel_constraint=SpectralNormalization(),
-            name="Conv_AttnG",
+        self.conv_attn_g = SpectralNormalization(
+            Conv2D(
+                c,
+                1,
+                padding="same",
+                name="Conv_AttnG",
+            )
         )
 
         self.max_pull_2d = MaxPool2D(

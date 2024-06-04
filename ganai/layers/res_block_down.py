@@ -15,23 +15,20 @@ class ResBlockDown(Layer):
 
     def build(self, input_shape):
         input_filter = input_shape[-1]
-        self.conv_1 = Conv2D(
-            self.filters, 3, padding="same", kernel_constraint=SpectralNormalization()
-        )
+        self.conv_1 = SpectralNormalization(Conv2D(self.filters, 3, padding="same"))
 
-        self.conv_2 = Conv2D(
-            self.filters, 3, padding="same", kernel_constraint=SpectralNormalization()
-        )
+        self.conv_2 = SpectralNormalization(Conv2D(self.filters, 3, padding="same"))
 
         self.learned_skip = False
 
         if self.filters != input_filter:
             self.learned_skip = True
-            self.conv_3 = Conv2D(
-                self.filters,
-                1,
-                padding="same",
-                kernel_constraint=SpectralNormalization(),
+            self.conv_3 = SpectralNormalization(
+                Conv2D(
+                    self.filters,
+                    1,
+                    padding="same",
+                )
             )
 
     def down(self, x: PyTree | NDArray[Any]) -> PyTree | NDArray[float64]:
