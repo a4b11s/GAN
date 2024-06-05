@@ -1,3 +1,6 @@
+import tensorflow as tf
+import os
+
 from ganai.configuration import Config, agrparser_init, ProgramArgs
 from ganai.generate_image import generate_image
 from ganai.plot_history import plot_history
@@ -7,6 +10,8 @@ from ganai.train import start_train
 def start():
     argparser = agrparser_init()
     args: ProgramArgs = argparser.parse_args()
+
+    print(tf.config.list_physical_devices("GPU"))
 
     config = Config()
 

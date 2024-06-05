@@ -1,6 +1,7 @@
 import tensorflow as tf
 from keras.api.utils import image_dataset_from_directory
 
+
 class DatasetFromDir:
     def __init__(
         self, dir: str, image_size: int, batch_size: int, split: float
@@ -11,7 +12,7 @@ class DatasetFromDir:
         self.split = split
 
     def load_dataset(self) -> tuple[tf.data.Dataset, tf.data.Dataset]:
-        train_dataset = image_dataset_from_directory(
+        train_dataset: tf.data.Dataset = image_dataset_from_directory(
             directory=self.dir,
             seed=271202,
             batch_size=self.batch_size,
@@ -22,7 +23,7 @@ class DatasetFromDir:
             validation_split=self.split,
             subset="training",
         )
-        val_data = image_dataset_from_directory(
+        val_data: tf.data.Dataset = image_dataset_from_directory(
             directory=self.dir,
             seed=271202,
             batch_size=self.batch_size,
@@ -33,9 +34,11 @@ class DatasetFromDir:
             validation_split=self.split,
             subset="validation",
         )
+        
+        buffer_size = self.batch_size * 4
 
-        train_dataset = train_dataset.map(self.preprocess_image)
-        val_data = val_data.map(self.preprocess_image)
+        train_dataset = train_dataset.map(self.preprocess_image, num_parallel_calls=tf.data.AUTOTUNE).prefetch(buffer_size=buffer_size)
+        val_data = val_data.map(self.preprocess_image, num_parallel_calls=tf.data.AUTOTUNE).prefetch(buffer_size=buffer_size)
 
         return train_dataset, val_data
 

@@ -8,10 +8,11 @@ package-mode = false
 
 [tool.poetry.dependencies]
 python = ">=3.11,<4"
-tensorflow = "^2.16.1"
-keras = "^3.3.3"
 pillow = "^10.3.0"
 matplotlib = "^3.9.0"
+tensorboard-plugin-profile = "^2.15.1"
+tensorflow = {extras = ["and-cuda"], version = "^2.16.1"}
+keras = "^3.3.3"
 
 [tool.poetry.group.dev.dependencies]
 mypy = "^1.10.0"

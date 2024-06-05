@@ -13,7 +13,6 @@ def get_compiled_wgan(
     kid_image_size: int,
     disc_config: tuple[int, list[int], list[bool]],
     gen_config: tuple[int, list[int], list[bool]],
-    is_summary: bool = False,
 ) -> WGAN:
     d_filters_start, d_filters_multiplayer, d_attentions = disc_config
     g_filters_start, g_filters_multiplayer, g_attentions = gen_config
@@ -24,10 +23,6 @@ def get_compiled_wgan(
     g_model: Model = build_sa_generator(
         noise_dim, g_filters_start, g_filters_multiplayer, g_attentions
     )
-
-    if is_summary:
-        d_model.summary()
-        g_model.summary()
 
     # (learning_rate=0.0002, beta_1=0.5 are recommended)
     generator_optimizer = Adam(learning_rate=0.0001, beta_1=0.0, beta_2=0.9)

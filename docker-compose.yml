@@ -7,9 +7,9 @@ services:
       context: .
       dockerfile: ./Dockerfile
     container_name: gan-ai
-    restart: unless-stopped
     environment:
       NVIDIA_VISIBLE_DEVICES: "all"
+      PYTHONUNBUFFERED: 1
     volumes:
       - ./data:/data
     deploy:

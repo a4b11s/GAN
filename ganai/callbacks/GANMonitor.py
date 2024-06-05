@@ -20,4 +20,4 @@ class GANMonitor(Callback):
         for index, batch in enumerate(image_batchs):
             plotted_image = plot_image((batch * 255).astype(np.uint8))
 
-            plotted_image.save(f"/data/output/e-{epoch + 1}-bc-{index + 1}-seed-{seed}.png")
+            plotted_image.save(f"./data/output/e-{epoch + 1}-bc-{index + 1}-seed-{seed}.png")

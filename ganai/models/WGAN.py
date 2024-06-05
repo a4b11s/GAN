@@ -1,6 +1,7 @@
 import math
 import time
 
+import keras.api
 import numpy as np
 import tensorflow as tf
 from matplotlib import pyplot as plt
@@ -9,6 +10,8 @@ from keras import Model
 from numpy.typing import NDArray
 
 from ganai.utilites import KID
+
+from typing import Any
 
 
 class WGAN(keras.Model):
@@ -32,6 +35,32 @@ class WGAN(keras.Model):
         self.d_loss_fn = None
         self.g_optimizer = None
         self.d_optimizer = None
+
+    def summary(
+        self,
+        line_length: Any | None = None,
+        positions: Any | None = None,
+        print_fn: Any | None = None,
+        expand_nested: bool = False,
+        show_trainable: bool = False,
+        layer_range: Any | None = None,
+    ) -> None:
+        self.generator.summary(
+            line_length=line_length,
+            positions=positions,
+            print_fn=print_fn,
+            expand_nested=expand_nested,
+            show_trainable=show_trainable,
+            layer_range=layer_range,
+        )
+        self.discriminator.summary(
+            line_length=line_length,
+            positions=positions,
+            print_fn=print_fn,
+            expand_nested=expand_nested,
+            show_trainable=show_trainable,
+            layer_range=layer_range,
+        )
 
     def compile(self, d_optimizer, g_optimizer, d_loss_fn, g_loss_fn, kid) -> None:
         super().compile()
@@ -142,11 +171,8 @@ class WGAN(keras.Model):
     def generate(
         self, batch_size: int = 1, batch_count: int = 1, seed: int = None
     ) -> tuple[NDArray[np.float32], int]:
-        if seed is None:
-            seed = math.floor(time.time())
-        tf.random.set_seed(seed)
         random_latent_vectors = tf.random.normal(
-            shape=(batch_count, batch_size, self.latent_dim)
+            shape=(batch_count, batch_size, self.latent_dim), seed=seed
         )
 
         generated = []
