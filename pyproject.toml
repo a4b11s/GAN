@@ -13,6 +13,7 @@ matplotlib = "^3.9.0"
 tensorboard-plugin-profile = "^2.15.1"
 tensorflow = {extras = ["and-cuda"], version = "^2.16.1"}
 keras = "^3.3.3"
+click = "^8.1.7"
 
 [tool.poetry.group.dev.dependencies]
 mypy = "^1.10.0"
@@ -20,4 +21,4 @@ ruff = "^0.4.7"
 mkinit = "^1.1.0"
 
 [tool.poetry.scripts]
-start = "ganai.main:start"
+start = "ganai.main:main"

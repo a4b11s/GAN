@@ -1,27 +1,52 @@
-import tensorflow as tf
-import os
+import click
 
-from ganai.configuration import Config, agrparser_init, ProgramArgs
-from ganai.generate_image import generate_image
-from ganai.plot_history import plot_history
-from ganai.train import start_train
+from ganai.configuration import Config
+from ganai.train import train
 
 
-def start():
-    argparser = agrparser_init()
-    args: ProgramArgs = argparser.parse_args()
+@click.group()
+@click.pass_context
+def cli(ctx: click.Context) -> None:
+    pass
 
-    print(tf.config.list_physical_devices("GPU"))
 
+@click.command(name="train", help="Train the model")
+@click.argument("chp_path", type=click.Path(exists=True, dir_okay=True), help="Checkpoint path")
+@click.option("-e", "--epochs", type=int, default=100, help="Number of epochs")
+@click.option(
+    "-b",
+    "--batch_size",
+    type=int,
+    default=32,
+    help="Batch size for training",
+)
+@click.option(
+    "-v",
+    "--verbose",
+    is_flag=True,
+    default=True,
+    help="Verbose mode",
+)
+def start_train(
+    chp_path: str,
+    epochs: int,
+    batch_size: int,
+    verbose: bool,
+) -> None:
     config = Config()
+    train(
+        epochs=epochs,
+        batch_size=batch_size,
+        chp_path=chp_path,
+        verbose=verbose,
+        config=config,
+    )
 
-    if args.logfile_path is not None:
-        plot_history(args.logfile_path)
-    elif args.generate:
-        generate_image(args.batch_size, args.batch_count, config)
-    elif args.train:
-        start_train(args.epoch_count, config)
+
+def main() -> None:
+    cli.add_command(start_train)
+    cli()
 
 
 if __name__ == "__main__":
-    start()
+    main()

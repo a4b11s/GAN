@@ -1,7 +1,5 @@
 class Config:
     def __init__(self) -> None:
-        self.batch_size: int = 64
-
         self.img_size: int = 64
         self.noise_dim: int = 128
 

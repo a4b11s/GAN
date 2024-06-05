@@ -8,11 +8,9 @@ from ganai.models import get_compiled_wgan
 from ganai.utilites import DatasetFromDir
 
 
-def start_train(epochs: int, config: Config) -> None:
-    model_id = 1
-
-    batch_size = config.batch_size
-
+def train(
+    epochs: int, batch_size: int, chp_path: str, verbose: int, config: Config
+) -> None:
     img_size = config.img_size
     noise_dim = config.noise_dim
 
@@ -38,14 +36,12 @@ def start_train(epochs: int, config: Config) -> None:
         disc_config=(d_filters_start, d_filters_multiplayer, d_attentions),
     )
 
-    loggerPath = f"./data/log/{model_id}-log.csv"
-
     train_callbacks: list[callable] = [
         GANMonitor(9),
         ModelCheckpoint(
-            f"./data/models/{model_id}-model.weights.h5",
+            f'{chp_path}/model.weights.h5',
             save_weights_only=True,
-            verbose=1,
+            verbose=0 if verbose else 0,
         ),
     ]
 
@@ -53,7 +49,6 @@ def start_train(epochs: int, config: Config) -> None:
 
     wgan.fit(
         train_data,
-        validation_data=val_data,
         epochs=epochs,
         callbacks=train_callbacks,
         verbose=1,
