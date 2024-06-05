@@ -9,8 +9,6 @@ from ganai.utilites import DatasetFromDir
 
 
 def start_train(epochs: int, config: Config) -> None:
-    start_time = datetime.datetime.now().strftime("%d%m%Y%H%M%S")
-
     model_id = 1
 
     batch_size = config.batch_size
@@ -44,12 +42,15 @@ def start_train(epochs: int, config: Config) -> None:
 
     train_callbacks: list[callable] = [
         GANMonitor(9),
-        CSVLogger(loggerPath, append=True),
-        ModelCheckpoint(f"./data/models/{model_id}-model.weights.h5", save_weights_only=True, verbose=1)
+        ModelCheckpoint(
+            f"./data/models/{model_id}-model.weights.h5",
+            save_weights_only=True,
+            verbose=1,
+        ),
     ]
-    
+
     wgan.summary()
-    
+
     wgan.fit(
         train_data,
         validation_data=val_data,
