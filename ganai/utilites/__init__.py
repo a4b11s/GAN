@@ -7,8 +7,8 @@ from ganai.utilites.KID import (
 from ganai.utilites.dataset_load import (
     DatasetFromDir,
 )
-from ganai.utilites.plot_image import (
-    plot_image,
+from ganai.utilites.images_plotter import (
+    ImagePlotter,
 )
 from ganai.utilites.config_loader import (
     ConfigLoader,
@@ -21,5 +21,5 @@ __all__ = [
     "LoadItem",
     "MODE",
     "ConfigLoader",
-    "plot_image",
+    "ImagePlotter",
 ]
