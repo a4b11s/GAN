@@ -2,7 +2,6 @@ import numpy as np
 from keras.api.activations import tanh
 from keras.api.layers import (
     Input,
-    Dense,
     Reshape,
     UpSampling2D,
     Conv2D,
@@ -29,8 +28,7 @@ def build_sa_generator(
 
     z = Input(shape=(latent_dim,))
 
-    x = SpectralNormalization(Dense(4 * 4 * filters_size[0]))(z)
-    x = Reshape((4, 4, filters_size[0]))(x)
+    x = Reshape((4, 4, int(latent_dim / (4 * 4))))(z)
 
     for c_filter, is_attention in zip(filters_size, is_attentions):
         x = UpSampling2D((2, 2))(x)
@@ -39,8 +37,6 @@ def build_sa_generator(
         if is_attention:
             x = SelfAttention()(x)
 
-    output_img = tanh(
-        SpectralNormalization(Conv2D(3, 3, padding="same"))(x)
-    )
+    output_img = tanh(SpectralNormalization(Conv2D(3, 3, padding="same"))(x))
 
     return Model([z], output_img, name="generator")
