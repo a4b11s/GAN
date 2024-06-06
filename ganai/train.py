@@ -6,9 +6,8 @@ from ganai.utilites import DatasetFromDir
 
 
 def train(
-    epochs: int, batch_size: int, chp_path: str, verbose: int, model_config: dict
+    epochs: int, batch_size: int, chp_path: str, verbose: bool, model_config: dict
 ) -> None:
-
     img_size = model_config["img_size"]
     noise_dim = model_config["noise_dim"]
     kid_image_size = model_config["kid_image_size"]
@@ -19,7 +18,6 @@ def train(
     d_filters_start = model_config["d_filters_start"]
     d_filters_multiplayer = model_config["d_filters_multiplayer"]
     d_attentions = model_config["d_attentions"]
-
 
     train_data, val_data = DatasetFromDir(
         "./data/anime/", img_size, batch_size, 1 / 200
@@ -33,20 +31,31 @@ def train(
         disc_config=(d_filters_start, d_filters_multiplayer, d_attentions),
     )
 
+    chp_file = f"{chp_path}/model.weights.h5"
+
     train_callbacks: list[callable] = [
         GANMonitor(9),
         ModelCheckpoint(
-            f"{chp_path}/model.weights.h5",
+            chp_file,
             save_weights_only=True,
-            verbose=0 if verbose else 0,
+            verbose=1 if verbose else 0,
         ),
     ]
 
-    wgan.summary()
+    try:
+        wgan.load_weights(chp_file)
+        if verbose:
+            print(f"Model weights loaded from {chp_file}")
+    except:
+        if verbose:
+            print(f"Model weights not loaded from {chp_file}")
+
+    if verbose:
+        wgan.summary()
 
     wgan.fit(
         train_data,
         epochs=epochs,
         callbacks=train_callbacks,
-        verbose=1,
+        verbose=1 if verbose else 2,
     )
