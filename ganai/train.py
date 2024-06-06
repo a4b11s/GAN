@@ -1,28 +1,25 @@
-import datetime
+from keras.api.callbacks import ModelCheckpoint
 
-from keras.api.callbacks import ModelCheckpoint, CSVLogger
-
-from ganai.configuration import Config
 from ganai.callbacks import GANMonitor
 from ganai.models import get_compiled_wgan
 from ganai.utilites import DatasetFromDir
 
 
 def train(
-    epochs: int, batch_size: int, chp_path: str, verbose: int, config: Config
+    epochs: int, batch_size: int, chp_path: str, verbose: int, model_config: dict
 ) -> None:
-    img_size = config.img_size
-    noise_dim = config.noise_dim
 
-    kid_image_size = config.kid_image_size
+    img_size = model_config["img_size"]
+    noise_dim = model_config["noise_dim"]
+    kid_image_size = model_config["kid_image_size"]
+    g_filters_start = model_config["g_filters_start"]
+    g_filters_multiplayer = model_config["g_filters_multiplayer"]
+    g_attentions = model_config["g_attentions"]
 
-    g_filters_start = config.g_filters_start
-    g_filters_multiplayer = config.g_filters_multiplayer
-    g_attentions = config.g_attentions
+    d_filters_start = model_config["d_filters_start"]
+    d_filters_multiplayer = model_config["d_filters_multiplayer"]
+    d_attentions = model_config["d_attentions"]
 
-    d_filters_start = config.d_filters_start
-    d_filters_multiplayer = config.d_filters_multiplayer
-    d_attentions = config.d_attentions
 
     train_data, val_data = DatasetFromDir(
         "./data/anime/", img_size, batch_size, 1 / 200
@@ -39,7 +36,7 @@ def train(
     train_callbacks: list[callable] = [
         GANMonitor(9),
         ModelCheckpoint(
-            f'{chp_path}/model.weights.h5',
+            f"{chp_path}/model.weights.h5",
             save_weights_only=True,
             verbose=0 if verbose else 0,
         ),
