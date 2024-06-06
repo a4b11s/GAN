@@ -2,6 +2,7 @@ import click
 
 from ganai.utilites import ConfigLoader
 from ganai.train import train
+from ganai.generate_image import generate_image
 
 
 @click.group()
@@ -59,7 +60,7 @@ def start_train(
     verbose: bool,
 ) -> None:
     config = ctx.obj["config"]
-    
+
     train(
         epochs=epochs,
         batch_size=batch_size,
@@ -69,8 +70,40 @@ def start_train(
     )
 
 
+@click.command(name="generate", help="Generate images")
+@click.argument("chp_path", type=click.Path(exists=True))
+@click.argument("output_path", type=click.Path(exists=True, dir_okay=True))
+@click.option(
+    "-bs", "--batch_size", type=int, default=9, help="Generate images batch_size"
+)
+@click.option(
+    "-bc", "--batch_count", type=int, default=1, help="Generate images batch_count"
+)
+@click.option("-v", "--verbose", is_flag=True, default=False, help="Verbose mode")
+@click.pass_context
+def start_generate(
+    ctx: click.Context,
+    chp_path: str,
+    output_path: str,
+    batch_size: int,
+    batch_count: int,
+    verbose: bool,
+) -> None:
+    config = ctx.obj["config"]
+
+    generate_image(
+        chp_path=chp_path,
+        output_path=output_path,
+        batch_size=batch_size,
+        batch_count=batch_count,
+        verbose=verbose,
+        model_config=config,
+    )
+
+
 def main() -> None:
     cli.add_command(start_train)
+    cli.add_command(start_generate)
     cli()
 
 
