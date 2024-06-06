@@ -1,5 +1,4 @@
 from keras.api.layers import Conv2D, Layer, SpectralNormalization, MaxPool2D
-from keras.api import ops
 
 import tensorflow as tf
 

@@ -1,5 +1,4 @@
 import click
-import os
 
 from ganai.utilites import ConfigLoader
 from ganai.train import train
