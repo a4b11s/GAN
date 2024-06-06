@@ -47,7 +47,7 @@ def cli(ctx: click.Context, config_path: str) -> None:
     "-v",
     "--verbose",
     is_flag=True,
-    default=True,
+    default=False,
     help="Verbose mode",
 )
 @click.pass_context
