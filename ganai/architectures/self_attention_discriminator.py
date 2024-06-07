@@ -5,13 +5,12 @@ from keras.api.models import Model
 from ganai.layers import ResBlockDown, SelfAttention
 
 
-def build_discriminator(img_size: int, filters_start: int=16, filters_multiplayer: list[int]=None, is_attentions: list[bool]=None) -> Model:
-    if filters_multiplayer is None:
-        filters_multiplayer = [1, 2, 4]
-
-    if is_attentions is None:
-        is_attentions = [False, True, False]
-
+def build_discriminator(
+    img_size: int,
+    filters_start: int,
+    filters_multiplayer: list[int],
+    is_attentions: list[bool],
+) -> Model:
     filters_size = np.array(filters_multiplayer) * filters_start
 
     img = Input(shape=(img_size, img_size, 3))
@@ -23,7 +22,6 @@ def build_discriminator(img_size: int, filters_start: int=16, filters_multiplaye
         if is_attention:
             x = SelfAttention()(x)
 
-    x = ResBlockDown(filters_size[-1], False)(x)
     x = Flatten()(x)
 
     output = Dense(1)(x)
