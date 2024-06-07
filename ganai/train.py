@@ -9,26 +9,26 @@ def train(
     epochs: int, batch_size: int, chp_path: str, verbose: bool, model_config: dict
 ) -> None:
     img_size = model_config["img_size"]
-    noise_dim = model_config["noise_dim"]
+    latent_dim = model_config["latent_dim"]
     kid_image_size = model_config["kid_image_size"]
     g_filters_start = model_config["g_filters_start"]
-    g_filters_multiplayer = model_config["g_filters_multiplayer"]
-    g_attentions = model_config["g_attentions"]
+    g_layer_count = model_config["g_layer_count"]
+    g_att_layers_num = model_config["g_att_layers_num"]
 
     d_filters_start = model_config["d_filters_start"]
-    d_filters_multiplayer = model_config["d_filters_multiplayer"]
-    d_attentions = model_config["d_attentions"]
-
+    d_layer_count = model_config["d_layer_count"]
+    d_att_layers_num = model_config["d_att_layers_num"]
+    
     datasetLoader = DatasetFromDir("./data/anime/", img_size, batch_size, 1 / 200)
 
     train_data, val_data = datasetLoader()
 
     wgan = get_compiled_wgan(
         img_size=img_size,
-        noise_dim=noise_dim,
+        latent_dim=latent_dim,
         kid_image_size=kid_image_size,
-        gen_config=(g_filters_start, g_filters_multiplayer, g_attentions),
-        disc_config=(d_filters_start, d_filters_multiplayer, d_attentions),
+        g_config=(g_filters_start, g_layer_count, g_att_layers_num),
+        d_config=(d_filters_start, d_layer_count, d_att_layers_num),
     )
 
     chp_file = f"{chp_path}/model.weights.h5"

@@ -1,5 +1,9 @@
 from ganai.architectures.self_attention_discriminator import (
-    build_discriminator,)
-from ganai.architectures.self_attention_generator import (build_sa_generator,)
+    build_discriminator,
+    D_NORM,
+)
+from ganai.architectures.self_attention_generator import (
+    build_generator, G_NORM
+)
 
-__all__ = ['build_discriminator', 'build_sa_generator']
+__all__ = ["build_discriminator", "build_generator", "D_NORM", "G_NORM"]

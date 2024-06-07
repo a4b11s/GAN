@@ -2,12 +2,17 @@ from keras.api.layers import Conv2D, Layer, SpectralNormalization, MaxPool2D
 
 import tensorflow as tf
 
+
 class SelfAttention(Layer):
     def __init__(self):
         super(SelfAttention, self).__init__()
 
     def build(self, input_shape):
         _, h, w, c = input_shape
+        
+        if(c <= 0):
+            print(input_shape)
+        
         self.n_feats = h * w
         self.conv_theta = SpectralNormalization(
             Conv2D(

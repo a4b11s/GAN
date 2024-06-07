@@ -1,11 +1,11 @@
-img_size: 64
-noise_dim: 128
+img_size: 32
+latent_dim: 128
 kid_image_size: 75
 
-g_filters_start: 32
-g_filters_multiplayer: [8, 4, 2, 1]
-g_attentions: [False, False, True, False]
+g_filters_start: 4
+g_layer_count: 4
+g_att_layers_num: []
 
-d_filters_start: 32
-d_filters_multiplayer: [1, 2, 4, 8]
-d_attentions: [False, True, False, False]
+d_filters_start: 4
+d_layer_count: 4
+d_att_layers_num: []

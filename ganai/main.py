@@ -1,5 +1,6 @@
 import click
 
+from ganai.architectures import build_generator, G_NORM
 from ganai.tune import tune
 from ganai.utilites import ConfigLoader
 from ganai.train import train
@@ -20,14 +21,14 @@ def cli(ctx: click.Context, config_path: str) -> None:
 
     config_fields = [
         "img_size",
-        "noise_dim",
+        "latent_dim",
         "kid_image_size",
         "g_filters_start",
-        "g_filters_multiplayer",
-        "g_attentions",
+        "g_layer_count",
+        "g_att_layers_num",
         "d_filters_start",
-        "d_filters_multiplayer",
-        "d_attentions",
+        "d_layer_count",
+        "d_att_layers_num",
     ]
 
     train_config = ConfigLoader(config_fields=config_fields, yml_path=config_path)
@@ -131,7 +132,6 @@ def main() -> None:
     cli.add_command(start_generate)
     cli.add_command(start_tuning)
     cli()
-
 
 if __name__ == "__main__":
     main()
