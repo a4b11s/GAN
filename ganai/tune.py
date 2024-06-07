@@ -31,14 +31,17 @@ def tune(epochs: int, batch_size: int, model_config: dict) -> None:
             disc_config=(d_filters_start, d_filters_multiplayer, d_attentions),
         )
 
-    tuner = keras_tuner.Hyperband(
+    tuner = keras_tuner.RandomSearch(
         build_model,
         objective=keras_tuner.Objective("val_kid", "min"),
         max_trials=200,
         executions_per_trial=4,
         seed=2712,
+        directory="./data/tuner",
+        project_name="wgan",
+        overwrite=True,
     )
-
+    
     tuner.search(
         train_data,
         epochs=epochs,
