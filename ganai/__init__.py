@@ -7,6 +7,7 @@ from ganai import main
 from ganai import models
 from ganai import train
 from ganai import utilites
+from ganai import losses
 
 __all__ = ['architectures', 'callbacks', 'configuration', 'generate_image',
-           'layers', 'main', 'models', 'train', 'utilites']
+           'layers', 'main', 'models', 'train', 'utilites', 'losses']

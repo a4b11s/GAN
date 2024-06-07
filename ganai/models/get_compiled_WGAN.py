@@ -1,8 +1,10 @@
 import tensorflow as tf
 from keras.api.optimizers import Adam
+from keras.api.optimizers.schedules import CosineDecay
 from keras.api.models import Model
 
 from ganai.architectures import build_discriminator, build_sa_generator
+from ganai.losses import discriminator_loss, generator_loss
 from ganai.models import WGAN
 from ganai.utilites import KID
 
@@ -25,20 +27,8 @@ def get_compiled_wgan(
     )
 
     # (learning_rate=0.0002, beta_1=0.5 are recommended)
-    generator_optimizer = Adam(learning_rate=0.0001, beta_1=0.0, beta_2=0.9)
-    discriminator_optimizer = Adam(learning_rate=0.0004, beta_1=0.0, beta_2=0.9)
-
-    # Define the loss functions for the discriminator,
-    # which should be (fake_loss - real_loss).
-    # We will add the gradient penalty later to this loss function.
-    def discriminator_loss(real_img: tf.Tensor, fake_img: tf.Tensor) -> tf.Tensor:
-        real_loss = tf.reduce_mean(real_img)
-        fake_loss = tf.reduce_mean(fake_img)
-        return fake_loss - real_loss
-
-    # Define the loss functions for the generator.
-    def generator_loss(fake_img: tf.Tensor) -> tf.Tensor:
-        return -tf.reduce_mean(fake_img)
+    generator_optimizer = Adam(learning_rate=0.0002, beta_1=0.5, beta_2=0.9)
+    discriminator_optimizer = Adam(learning_rate=0.0002, beta_1=0.5, beta_2=0.9)
 
     wgan = WGAN(
         discriminator=d_model,
