@@ -22,9 +22,6 @@ def train(
     datasetLoader = DatasetFromDir("./data/anime/", img_size, batch_size, 1 / 200)
 
     train_data, val_data = datasetLoader()
-    
-    for exampl in train_data.take(1):
-        print(exampl.shape)
 
     wgan = get_compiled_wgan(
         img_size=img_size,
