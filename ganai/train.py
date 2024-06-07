@@ -19,9 +19,12 @@ def train(
     d_filters_multiplayer = model_config["d_filters_multiplayer"]
     d_attentions = model_config["d_attentions"]
 
-    train_data, val_data = DatasetFromDir(
-        "./data/anime/", img_size, batch_size, 1 / 200
-    ).load_dataset()
+    datasetLoader = DatasetFromDir("./data/anime/", img_size, batch_size, 1 / 200)
+
+    train_data, val_data = datasetLoader()
+    
+    for exampl in train_data.take(1):
+        print(exampl.shape)
 
     wgan = get_compiled_wgan(
         img_size=img_size,
