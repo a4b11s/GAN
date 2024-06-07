@@ -1,5 +1,6 @@
 import click
 
+from ganai.tune import tune
 from ganai.utilites import ConfigLoader
 from ganai.train import train
 from ganai.generate_image import generate_image
@@ -70,6 +71,30 @@ def start_train(
     )
 
 
+@click.command(name="tune", help="Tune HP of the model")
+@click.option("-e", "--epochs", type=int, default=100, help="Number of epochs")
+@click.option(
+    "-b",
+    "--batch_size",
+    type=int,
+    default=32,
+    help="Batch size for training",
+)
+@click.pass_context
+def start_tuning(
+    ctx: click.Context,
+    epochs: int,
+    batch_size: int,
+) -> None:
+    config = ctx.obj["config"]
+
+    tune(
+        epochs=epochs,
+        batch_size=batch_size,
+        model_config=config,
+    )
+
+
 @click.command(name="generate", help="Generate images")
 @click.argument("chp_path", type=click.Path(exists=True))
 @click.argument("output_path", type=click.Path(exists=True, dir_okay=True))
@@ -104,6 +129,7 @@ def start_generate(
 def main() -> None:
     cli.add_command(start_train)
     cli.add_command(start_generate)
+    cli.add_command(start_tuning)
     cli()
 
 
