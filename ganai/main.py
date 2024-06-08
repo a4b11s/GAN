@@ -142,7 +142,7 @@ def start_setup_worker(
 ):
     claster_config = ConfigLoader(
         config_fields=["workers_addr"], yml_path="./ganai/claster.yml"
-    )
+    ).config
     setup_worker(workers_addr=claster_config["workers_addr"], this_worker_idx=this_worker_idx)
 
 @click.command("test_gpu")
