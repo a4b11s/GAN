@@ -49,7 +49,7 @@ def build_generator(
 
     for i in range(layer_count):
         filters = filters_start * int(f_multiplayer)
-        print(f"filters: {filters}, i: {i}, f_multiplayer: {f_multiplayer}")
+        #print(f"filters: {filters}, i: {i}, f_multiplayer: {f_multiplayer}")
 
         
         if norm == G_NORM.SN:

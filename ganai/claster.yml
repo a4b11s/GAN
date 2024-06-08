@@ -1,0 +1,1 @@
+workers_addr: ["localhost:3000", "localhost:3001"]

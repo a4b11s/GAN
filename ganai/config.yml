@@ -2,10 +2,10 @@ img_size: 32
 latent_dim: 128
 kid_image_size: 75
 
-g_filters_start: 4
+g_filters_start: 64
 g_layer_count: 4
 g_att_layers_num: []
 
-d_filters_start: 4
+d_filters_start: 64
 d_layer_count: 4
 d_att_layers_num: []

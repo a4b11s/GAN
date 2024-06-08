@@ -1,8 +1,8 @@
 import click
 
-from ganai.architectures import build_generator, G_NORM
-from ganai.tune import tune
 from ganai.utilites import ConfigLoader
+from ganai.tune import tune
+from ganai.setup_worker import setup_worker
 from ganai.train import train
 from ganai.generate_image import generate_image
 
@@ -53,6 +53,13 @@ def cli(ctx: click.Context, config_path: str) -> None:
     default=False,
     help="Verbose mode",
 )
+@click.option(
+    "-mv",
+    "--multi_worker",
+    is_flag=True,
+    default=False,
+    help="Multi worker mode",
+)
 @click.pass_context
 def start_train(
     ctx: click.Context,
@@ -60,6 +67,7 @@ def start_train(
     epochs: int,
     batch_size: int,
     verbose: bool,
+    is_mv: bool,
 ) -> None:
     config = ctx.obj["config"]
 
@@ -69,6 +77,7 @@ def start_train(
         chp_path=chp_path,
         verbose=verbose,
         model_config=config,
+        is_mv=is_mv,
     )
 
 
@@ -88,7 +97,6 @@ def start_tuning(
     batch_size: int,
 ) -> None:
     config = ctx.obj["config"]
-
     tune(
         epochs=epochs,
         batch_size=batch_size,
@@ -127,11 +135,29 @@ def start_generate(
     )
 
 
+@click.command(name="setup_worker", help="Setup worker")
+@click.option("-i", "--this_worker_idx", type=int, default=0, help="This worker idx")
+def start_setup_worker(
+    this_worker_idx: int,
+):
+    claster_config = ConfigLoader(
+        config_fields=["workers_addr"], yml_path="./ganai/claster.yml"
+    )
+    setup_worker(workers_addr=claster_config["workers_addr"], this_worker_idx=this_worker_idx)
+
+@click.command("test_gpu")
+def test_gpu():
+    import tensorflow as tf
+    print(tf.test.gpu_device_name())
+
 def main() -> None:
     cli.add_command(start_train)
     cli.add_command(start_generate)
     cli.add_command(start_tuning)
+    cli.add_command(start_setup_worker)
+    cli.add_command(test_gpu)
     cli()
+
 
 if __name__ == "__main__":
     main()

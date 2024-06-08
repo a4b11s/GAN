@@ -15,6 +15,6 @@ COPY ganai ganai
 RUN --mount=type=cache,target=${POETRY_CACHE_DIR} \ 
     poetry install --without dev
 
-RUN echo "some"
+RUN poetry run start setup_worker ${WOR_ADDR}
 
-ENTRYPOINT [ "poetry", "run", "start", "-t", "-e", "100"]
+ENTRYPOINT [ "poetry", "run", "start", "train", "-e", "100", '-b', '256', '-mv']
