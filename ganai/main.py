@@ -1,4 +1,7 @@
 import click
+import keras
+import tensorflow as tf
+from termcolor import cprint
 
 from ganai.architectures import build_generator, G_NORM
 from ganai.tune import tune
@@ -14,8 +17,28 @@ from ganai.generate_image import generate_image
     type=click.Path(exists=True),
     help="Config file path",
 )
+@click.option("-cg", "--check-gpu", is_flag=True, default=False, help="Check GPU")
+@click.option(
+    "-tv",
+    "--tensorflow-verbose",
+    is_flag=True,
+    default=False,
+    help="Tensorflow verbose",
+)
 @click.pass_context
-def cli(ctx: click.Context, config_path: str) -> None:
+def cli(
+    ctx: click.Context, config_path: str, check_gpu: bool, tensorflow_verbose: bool
+) -> None:
+    if not tensorflow_verbose:
+        tf.compat.v1.logging.set_verbosity(tf.compat.v1.logging.FATAL)
+
+    if check_gpu:
+        gpu_list = tf.config.list_physical_devices("GPU")
+        if len(gpu_list) == 0:
+            cprint("No GPU found", "red", attrs=["bold"])
+        else:
+            cprint(f"Found: {gpu_list}", "green", attrs=["bold"])
+
     if config_path is None:
         config_path = "./ganai/config.yml"
 
@@ -53,6 +76,7 @@ def cli(ctx: click.Context, config_path: str) -> None:
     default=False,
     help="Verbose mode",
 )
+@click.option('-mpp', '--mixed-precision-policy', is_flag=True, default=False, help="Mixed precision policy")
 @click.pass_context
 def start_train(
     ctx: click.Context,
@@ -60,7 +84,15 @@ def start_train(
     epochs: int,
     batch_size: int,
     verbose: bool,
+    mixed_precision_policy: bool,
 ) -> None:
+    if mixed_precision_policy:
+        policy = keras.mixed_precision.Policy("mixed_float16")
+        keras.mixed_precision.set_global_policy(policy)
+    
+    if verbose:
+        cprint(f"Mixed precision policy set to {keras.mixed_precision.global_policy()}", "green", attrs=["bold"])
+    
     config = ctx.obj["config"]
 
     train(
@@ -132,6 +164,7 @@ def main() -> None:
     cli.add_command(start_generate)
     cli.add_command(start_tuning)
     cli()
+
 
 if __name__ == "__main__":
     main()

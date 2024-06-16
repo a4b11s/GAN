@@ -1,5 +1,6 @@
 import os
 import tensorflow as tf
+import keras
 from keras.api.utils import image_dataset_from_directory
 
 from typing import Literal
@@ -44,6 +45,10 @@ class DatasetFromDir:
             "validation": os.path.join(self.cache_full_path, "validation"),
         }
 
+        self.d_policy = keras.mixed_precision.global_policy()
+        self.is_float16 = self.d_policy.name == "mixed_float16"
+        self.d_type = tf.float16 if self.is_float16 else tf.float32
+    
     def __call__(self) -> tuple[tf.data.Dataset, tf.data.Dataset]:
         """
         This method is the entry point for the DatasetFromDir class. It checks if the cache exists,
@@ -128,5 +133,5 @@ class DatasetFromDir:
         The pixel values of the image are divided by 255 and then cast to floating-point numbers using tf.cast.
         """
 
-        data = tf.cast(data / 255.0, tf.float32)
+        data = tf.cast(data / 255.0, self.d_type)
         return data
