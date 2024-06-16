@@ -1,0 +1,4 @@
+// TODO: make function for adding this envs
+
+export CUDNN_PATH=/home/a4b1s/.cache/pypoetry/virtualenvs/ganai-dxI2yqZS-py3.12/lib/python3.12/site-packages/nvidia/cudnn
+export LD_LIBRARY_PATH=/home/a4b1s/.cache/pypoetry/virtualenvs/ganai-dxI2yqZS-py3.12/lib/python3.12/site-packages/nvidia/cudnn/lib
