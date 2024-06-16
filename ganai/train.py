@@ -55,6 +55,7 @@ def train(
 
     wgan.fit(
         train_data,
+        validation_data=val_data,
         epochs=epochs,
         callbacks=train_callbacks,
         verbose=1 if verbose else 2,
